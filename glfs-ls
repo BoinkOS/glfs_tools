@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import sys
+from glfsimage import GLFSImage
+
+def glfs_ls():
+	if len(sys.argv) != 2:
+		print('Usage: glfs-ls <disk image path>')
+		return
+		
+	path = sys.argv[1]
+	
+	try:
+		fs = GLFSImage(path)
+		
+		if not fs.check_superblock():
+			print('Could not verify GLFS superblock.')
+			fs.close()
+			return
+			
+		entries = fs.parse_directory_table()
+		
+		if not entries:
+			print("No entries.")
+			fs.close()
+			return
+			
+		print(f'Files in {path}:')
+		print(f'{"Filename":<32} {"Start Sector":<12} {"Size (bytes)":<12}')
+		print('-' * 60)
+		for entry in entries:
+			print(f'{entry["filename"]:<32} {entry["start_sector"]:<12} {entry["size"]:<12}')
+
+		fs.close()
+		
+	except FileNotFoundError:
+		print('Disk image not found.')
+		
+if __name__ == '__main__':
+	glfs_ls()

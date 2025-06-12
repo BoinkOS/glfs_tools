@@ -48,17 +48,17 @@ class GLFSImage:
 			sector = self.read_sector(sector_num)
 			buf += sector
 			
-			end_marker_pos = buffer.find(b'__END__\n')
+			end_marker_pos = buf.find(b'__END__\n')
 			if end_marker_pos != -1:
-				buffer = buffer[:end_marker_pos]
+				buf = buf[:end_marker_pos]
 				break
 
 			sector_num += 1
 			
 		offset = 0
 		
-		while offset + ENTRY_SIZE <= len(buffer):
-			entry_data = buffer[offset:offset + ENTRY_SIZE]
+		while offset + ENTRY_SIZE <= len(buf):
+			entry_data = buf[offset:offset + ENTRY_SIZE]
 			filename = entry_data[:FILENAME_SIZE].rstrip(b'\x00').decode('utf-8')
 			start_sector, size = struct.unpack('<II', entry_data[FILENAME_SIZE:])
 			
