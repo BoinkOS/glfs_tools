@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys
+from glfsimage import GLFSImage
+
+
+def glfs_cat():
+	if len(sys.argv) != 4:
+		print("Usage: glfs-cat <image> <filename-in-image> <output-path>")
+		sys.exit(1)
+
+	img_path = sys.argv[1]
+	filename = sys.argv[2]
+	output_path = sys.argv[3]
+
+	fs = GLFSImage(img_path)
+	fs.extract_file(filename, output_path)
+	fs.close()
+	
+		
+if __name__ == '__main__':
+	glfs_cat()

@@ -196,3 +196,22 @@ class GLFSImage:
 
 
 		print(f'Added file: {dest_filename} at sector {current_sector}')
+		
+	def extract_file(self, filename, output_path):
+		entries = self.parse_directory_table()
+	
+		for entry in entries:
+			if entry['filename'] == filename:
+				start = entry['start_sector'] * SECTOR_SIZE
+				size = entry['size']
+			
+				self.file.seek(start)
+				data = self.file.read(size)
+			
+				with open(output_path, 'wb') as out_file:
+					out_file.write(data)
+			
+				print(f'Extracted "{filename}" to "{output_path}"')
+				return
+	
+		print(f'File "{filename}" not found in image.')
