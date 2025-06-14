@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import sys
+from glfsimage import GLFSImage
+
+
+def glfs_add():
+	if len(sys.argv) != 4:
+		print('Usage: glfs-add <disk image path> <dource file path> <destination file name>')
+		return
+		
+	disk_image = sys.argv[1]
+	source_file = sys.argv[2]
+	dest_filename = sys.argv[3]
+
+	fs = GLFSImage(disk_image)
+
+	if not fs.check_superblock():
+		print('Not a valid GLFS disk image.')
+		fs.close()
+		return
+
+	fs.add_file(source_file, dest_filename)
+	fs.close()
+
+if __name__ == '__main__':
+	glfs_add()
